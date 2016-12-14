@@ -5,6 +5,7 @@
   var flash=require('connect-flash');
   var config=require('config-lite');
   var routes=require('./routes');
+  var mysql = require('mysql');
   var pkg=require('./package');
 
   var app=express();
@@ -20,21 +21,53 @@
   app.use(express.static(path.join(__dirname,'public')));
   //session中间件
   app.use(session({
-      name:config.session.key,//设置cookie中保存session id的字段名称
-      secret:config.session.secret,//通过设置secret来计算hash值并放在cookie中，使产生的signedCookie防篡改
-      cookie:{
-          maxAge:config.session.maxAge//过期时间，过期后cookie中的session id自动删除
-      },
-      store:new MongoStore({//将session 存储到mongodb
-          url:config.mongodb//mongodb地址
-      })
-  }));
+    name: config.session.key,// 设置 cookie 中保存 session id 的字段名称
+    secret: config.session.secret,// 通过设置 secret 来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改
+    cookie: {
+        maxAge: config.session.maxAge// 过期时间，过期后 cookie 中的 session id 自动删除
+    },
+    // store: new MongoStore({// 将 session 存储到 mongodb
+    //     url: config.mongodb// mongodb 地址
+    // })
+    // store:mysql.createConnection({  
+    //     user: 'FreshMan',  
+    //     password: 'FreshMan',  
+    //     })
+    }));
 
   //flash 中间件，用来显示通知
   app.use(flash());
 
   //路由
   routes(app);
+
+  var Test_dataBase="world";
+  var Test_Table="city";
+
+  //创建链接
+  var client=mysql.createConnection({
+      user:"FreshMan",
+      password:'qinxianbo'
+  });
+
+  client.connect();
+
+  client.query('use '+Test_dataBase);
+
+  client.query('select * from '+Test_Table,
+    function selectcb(err,resulte,fields){
+        if(err){
+            throw err;
+        }
+        if(resulte){
+            for(var i = 0; i < 10; i++)
+            {
+                console.log("%d\t%s\t%s", resulte[i].ID, resulte[i].Name, resulte[i].District);
+            }
+        }
+        client.end();
+    });
+
 
   app.listen(config.port,function(){
       console.log('${pkg.name} listen on port ${config.port}');
