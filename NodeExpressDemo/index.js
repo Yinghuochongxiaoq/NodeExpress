@@ -13,12 +13,11 @@ app.set('Views',__dirname);
 //后缀名为ejs
 // app.set('view engine','ejs');
 app.set('view engine','html');
-
 //运行ejs模块
 app.engine('.html',require('ejs').__express);
 
 //指定静态文件目录
-// app.use(express.static(require('path').join(__dirname,'public')));
+app.use(express.static(require('path').join(__dirname,'public')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));

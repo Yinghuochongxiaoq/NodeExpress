@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script src="/socket.io/socket.io.js"></script>
+        <title>home</title>
+        <script>
+            window.onload=function(){
+                var socket=io.connect('/',{_query:'sid=123456'});
+                socket.on('connect',function(){
+                    socket.send('hello world!');
+                    document.write('连接成功');
+                });
+                socket.on('message',function(data){
+                    alert(data);
+                });
+            }
+            /*
+            客户端连接方式：
+            connect:成功连接到服务器；
+            connecting:正在连接；
+            disconnect:断开连接；
+            connect_failed:连接失败；
+            error:连接错误；
+            message:监听服务端send的信息；
+            reconnect_failed:重新连接失败；
+            reconnect:重新连接成功；
+            reconnecting:正在重连。
+            客户端socket发起连接时的顺序时怎样的呢？当第一次连接时，事件触发顺序为：connecting,connect,当失去连接时，事件触发顺序为disconnect,reconnecting,connecting,reconnect,connect.
+            */
+        </script>
+    </head>
+    <body>
+    </body>
+</html>

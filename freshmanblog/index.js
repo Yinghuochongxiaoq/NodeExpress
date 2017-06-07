@@ -6,6 +6,7 @@
   var config=require('config-lite');
   var routes=require('./routes');
   var mysql = require('mysql');
+  var cookieParse=require('cookie-parser');
   var pkg=require('./package');
 
   var app=express();
@@ -37,7 +38,7 @@
 
   //flash 中间件，用来显示通知
   app.use(flash());
-
+  app.use(cookieParse());
   //路由
   routes(app);
 
